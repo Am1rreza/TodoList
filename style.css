@@ -17,6 +17,101 @@
   --mainBlack: #222;
   --mainGray: #7c7c7c;
   --mainRed: #db2777;
-  --mainTransition: all 0.3s linear;
+  --mainTransition: all 0.3s;
   --bodyColor: #f6f6f6;
+}
+
+/* Body */
+body {
+  background-color: var(--bodyColor);
+  color: var(--mainBlack);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header */
+header {
+  min-height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mainBlack);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.form-container {
+  display: flex;
+  align-items: center;
+}
+
+.todo-container {
+  width: 25rem;
+}
+
+form {
+  width: 25rem;
+  background-color: var(--mainWhite);
+  display: flex;
+  justify-content: space-between;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+form input {
+  flex: 1;
+}
+
+form input,
+form button {
+  border: none;
+  outline: none;
+  background-color: var(--mainWhite);
+  font-size: 1rem;
+  padding: 0.5rem;
+}
+
+form button {
+  cursor: pointer;
+  color: var(--primaryColor);
+  transition: var(--mainTransition);
+  font-size: 1.2rem;
+}
+
+form button:hover {
+  background-color: var(--primaryColor);
+  color: var(--mainWhite);
+}
+
+.todo {
+  display: flex;
+  background-color: var(--secondaryColor);
+  color: var(--primaryColor);
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0;
+  transition: var(--mainTransition);
+  border-radius: 5px;
+}
+
+.todo li {
+  flex: 1;
+  padding: 0.5rem;
+  font-weight: bold;
+}
+
+.todo span {
+  display: block;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.bi-trash3 {
+  color: var(--mainRed);
 }
