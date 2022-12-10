@@ -7,15 +7,38 @@
     <title>Document</title>
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.2/font/bootstrap-icons.min.css"
+      integrity="sha512-YFENbnqHbCRmJt5d+9lHimyEMt8LKSNTMLSaHjvsclnZGICeY/0KYEeiHwD1Ux4Tcao0h60tdcMv+0GljvWyHg=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    یبییس
+    <header>
+      <h1>Todo List</h1>
+    </header>
+    <section class="form-container">
+      <form>
+        <input type="text" class="todo-input" />
+        <i class="bi bi-plus-lg"></i>
+      </form>
+      <div class="select">
+        <select class="filter-todos" name="todos">
+          <option value="all">All</option>
+          <option value="completed">Completed</option>
+          <option value="uncompleted">Uncompleted</option>
+        </select>
+      </div>
+    </section>
+    <section class="todo-container">
+      <ul class="todo">
+        <li>task 1</li>
+        <span><i class="bi bi-trash3"></i></span>
+        <span><i class="bi bi-check2"></i></span>
+      </ul>
+    </section>
+
     <script src="./index.js"></script>
   </body>
 </html>
