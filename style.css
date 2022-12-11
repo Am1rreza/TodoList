@@ -120,3 +120,35 @@ form button:hover {
   opacity: 0.6;
   text-decoration: line-through;
 }
+
+select {
+  appearance: none;
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 0.8rem;
+  color: var(--primaryColor);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.select {
+  border-radius: 5px;
+  overflow: hidden;
+  margin-left: 1rem;
+  width: 10rem;
+  position: relative;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.select::after {
+  content: "\25BC";
+  position: absolute;
+  top: 55%;
+  transform: translateY(-50%);
+  right: 0;
+  padding: 0.5rem;
+  color: var(--primaryColor);
+  pointer-events: none;
+}
