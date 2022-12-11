@@ -8,6 +8,7 @@ const filterOption = document.querySelector(".filter-todos");
 todoButton.addEventListener("click", addTodo);
 todoList.addEventListener("click", ckeckRemove);
 filterOption.addEventListener("click", filterTodos);
+document.addEventListener("DOMContentLoaded", getLocalTodos);
 
 // functions
 function addTodo(e) {
@@ -25,6 +26,7 @@ function addTodo(e) {
     todoDiv.innerHTML = newTodo;
     // append to todo container
     todoList.appendChild(todoDiv);
+    saveLocalTodos(todoInput.value);
     todoInput.value = "";
   }
 }
@@ -38,6 +40,7 @@ function ckeckRemove(e) {
     todo.classList.toggle("completed");
   } else if (classList[1] === "bi-trash3") {
     const todo = item.parentElement.parentElement;
+    removeLocalTodo(todo);
     todo.remove();
   }
 }
@@ -68,4 +71,41 @@ function filterTodos(e) {
         break;
     }
   });
+}
+
+// Local Storage
+function saveLocalTodos(todo) {
+  let savedTodos = localStorage.getItem("todos")
+    ? JSON.parse(localStorage.getItem("todos"))
+    : [];
+  savedTodos.push(todo);
+  localStorage.setItem("todos", JSON.stringify(savedTodos));
+}
+
+function getLocalTodos() {
+  let savedTodos = localStorage.getItem("todos")
+    ? JSON.parse(localStorage.getItem("todos"))
+    : [];
+  savedTodos.forEach((todo) => {
+    const todoDiv = document.createElement("div");
+    todoDiv.classList.add("todo");
+    const newTodo = `
+  <li>${todo}</li>
+  <span><i class="bi bi-trash3"></i></span>
+  <span><i class="bi bi-check2"></i></span>
+  `;
+    todoDiv.innerHTML = newTodo;
+    // append to todo container
+    todoList.appendChild(todoDiv);
+  });
+}
+
+function removeLocalTodo(todo) {
+  let savedTodos = localStorage.getItem("todos")
+    ? JSON.parse(localStorage.getItem("todos"))
+    : [];
+  const filteredTodos = savedTodos.filter(
+    (t) => t !== todo.children[0].innerText
+  );
+  localStorage.setItem("todos", JSON.stringify(filteredTodos));
 }
