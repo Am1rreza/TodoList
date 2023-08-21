@@ -10,11 +10,6 @@ todoList.addEventListener("click", ckeckRemove);
 filterOption.addEventListener("click", filterTodos);
 document.addEventListener("DOMContentLoaded", getLocalTodos);
 
-// global variables
-const todoBody = `<li>${todoInput.value}</li>
-<span><i class="bi bi-trash3"></i></span>
-<span><i class="bi bi-check2"></i></span>`;
-
 // utility functions
 function createElement(tagName, className, body) {
   const element = document.createElement(tagName);
@@ -29,6 +24,10 @@ function createElement(tagName, className, body) {
 // functions
 function addTodo(e) {
   e.preventDefault();
+
+  const todoBody = `<li>${todoInput.value}</li>
+<span><i class="bi bi-trash3"></i></span>
+<span><i class="bi bi-check2"></i></span>`;
 
   if (todoInput.value === "") {
     alert("Please enter todo!");
