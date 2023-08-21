@@ -31,13 +31,14 @@ function addTodo(e) {
 
   if (todoInput.value === "") {
     alert("Please enter todo!");
-  } else {
-    const todoDiv = createElement("div", "todo", todoBody);
-    // append to todo container
-    todoList.appendChild(todoDiv);
-    saveLocalTodos(todoInput.value);
-    todoInput.value = "";
+    return;
   }
+
+  const todoDiv = createElement("div", "todo", todoBody);
+  // append to todo container
+  todoList.appendChild(todoDiv);
+  saveLocalTodos(todoInput.value);
+  todoInput.value = "";
 }
 
 function ckeckRemove(e) {
