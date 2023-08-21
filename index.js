@@ -1,121 +1,98 @@
-// selector
 const todoInput = document.querySelector(".todo-input");
 const todoButton = document.querySelector(".todo-button");
 const todoList = document.querySelector(".todo-container");
 const filterOption = document.querySelector(".filter-todos");
 
-// event Listeners
 todoButton.addEventListener("click", addTodo);
-todoList.addEventListener("click", ckeckRemove);
+todoList.addEventListener("click", handleTodoClick);
 filterOption.addEventListener("click", filterTodos);
-document.addEventListener("DOMContentLoaded", getLocalTodos);
+document.addEventListener("DOMContentLoaded", loadTodos);
 
-// utility functions
-function createElement(tagName, className, body) {
-  const element = document.createElement(tagName);
-  if (className) {
-    element.classList.add(className);
-  }
-  element.innerHTML = body;
-
-  return element;
-}
-
-// functions
 function addTodo(e) {
   e.preventDefault();
+  const todoText = todoInput.value.trim();
 
-  const todoBody = `<li>${todoInput.value}</li>
-<span><i class="bi bi-trash3"></i></span>
-<span><i class="bi bi-check2"></i></span>`;
-
-  if (todoInput.value === "") {
-    alert("Please enter todo!");
+  if (todoText === "") {
+    alert("Please enter a todo!");
     return;
   }
 
-  const todoDiv = createElement("div", "todo", todoBody);
-  // append to todo container
+  const todoDiv = createTodoElement(todoText);
   todoList.appendChild(todoDiv);
-  saveLocalTodos(todoInput.value);
+  saveTodoToLocal(todoText);
   todoInput.value = "";
 }
 
-function ckeckRemove(e) {
-  const classList = [...e.target.classList];
+function createTodoElement(todoText) {
+  const todoDiv = document.createElement("div");
+  todoDiv.classList.add("todo");
+  todoDiv.innerHTML = `
+    <li>${todoText}</li>
+    <span><i class="bi bi-trash3"></i></span>
+    <span><i class="bi bi-check2"></i></span>
+  `;
+  return todoDiv;
+}
+
+function handleTodoClick(e) {
   const item = e.target;
 
-  if (classList[1] === "bi-check2") {
-    const todo = item.parentElement.parentElement;
-    todo.classList.toggle("completed");
-  } else if (classList[1] === "bi-trash3") {
-    const todo = item.parentElement.parentElement;
-    removeLocalTodo(todo);
-    todo.remove();
+  if (item.classList.contains("bi-check2")) {
+    toggleTodoCompletion(item);
+  } else if (item.classList.contains("bi-trash3")) {
+    removeTodoElement(item);
   }
+}
+
+function toggleTodoCompletion(item) {
+  const todo = item.parentElement.parentElement;
+  todo.classList.toggle("completed");
+}
+
+function removeTodoElement(item) {
+  const todo = item.parentElement.parentElement;
+  removeTodoFromLocal(todo.querySelector("li").innerText);
+  todo.remove();
 }
 
 function filterTodos(e) {
   const todos = [...todoList.childNodes];
-  todos.forEach((todo) => {
-    switch (e.target.value) {
-      case "all":
-        todo.style.display = "flex";
-        break;
-      case "completed":
-        if (todo.classList.contains("completed")) {
-          todo.style.display = "flex";
-        } else {
-          todo.style.display = "none";
-        }
-        break;
-      case "uncompleted":
-        if (!todo.classList.contains("completed")) {
-          todo.style.display = "flex";
-        } else {
-          todo.style.display = "none";
-        }
-        break;
+  const filterValue = e.target.value;
 
-      default:
-        break;
+  todos.forEach((todo) => {
+    const isCompleted = todo.classList.contains("completed");
+    if (
+      filterValue === "all" ||
+      (filterValue === "completed" && isCompleted) ||
+      (filterValue === "uncompleted" && !isCompleted)
+    ) {
+      todo.style.display = "flex";
+    } else {
+      todo.style.display = "none";
     }
   });
 }
 
-// Local Storage
-function saveLocalTodos(todo) {
-  let savedTodos = localStorage.getItem("todos")
-    ? JSON.parse(localStorage.getItem("todos"))
-    : [];
-  savedTodos.push(todo);
+function saveTodoToLocal(todoText) {
+  const savedTodos = getSavedTodos();
+  savedTodos.push(todoText);
   localStorage.setItem("todos", JSON.stringify(savedTodos));
 }
 
-function getLocalTodos() {
-  let savedTodos = localStorage.getItem("todos")
-    ? JSON.parse(localStorage.getItem("todos"))
-    : [];
-  savedTodos.forEach((todo) => {
-    const todoDiv = document.createElement("div");
-    todoDiv.classList.add("todo");
-    const newTodo = `
-  <li>${todo}</li>
-  <span><i class="bi bi-trash3"></i></span>
-  <span><i class="bi bi-check2"></i></span>
-  `;
-    todoDiv.innerHTML = newTodo;
-    // append to todo container
+function getSavedTodos() {
+  return JSON.parse(localStorage.getItem("todos")) || [];
+}
+
+function loadTodos() {
+  const savedTodos = getSavedTodos();
+  savedTodos.forEach((todoText) => {
+    const todoDiv = createTodoElement(todoText);
     todoList.appendChild(todoDiv);
   });
 }
 
-function removeLocalTodo(todo) {
-  let savedTodos = localStorage.getItem("todos")
-    ? JSON.parse(localStorage.getItem("todos"))
-    : [];
-  const filteredTodos = savedTodos.filter(
-    (t) => t !== todo.children[0].innerText
-  );
-  localStorage.setItem("todos", JSON.stringify(filteredTodos));
+function removeTodoFromLocal(todoText) {
+  const savedTodos = getSavedTodos();
+  const updatedTodos = savedTodos.filter((text) => text !== todoText);
+  localStorage.setItem("todos", JSON.stringify(updatedTodos));
 }
