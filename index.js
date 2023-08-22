@@ -17,20 +17,33 @@ function addTodo(e) {
     return;
   }
 
-  const todoDiv = createTodoElement(todoText);
+  const todoObject = createTodoObject(todoText);
+  const todoDiv = createTodoElement(todoObject);
   todoList.appendChild(todoDiv);
-  saveTodoToLocal(todoText);
+  saveTodoToLocal(todoObject);
   todoInput.value = "";
 }
 
-function createTodoElement(todoText) {
+function createTodoObject(todoText) {
+  const uniqueId = new Date().getTime();
+  return {
+    id: uniqueId,
+    text: todoText,
+    completed: false,
+  };
+}
+
+function createTodoElement(todoObject) {
   const todoDiv = document.createElement("div");
   todoDiv.classList.add("todo");
   todoDiv.innerHTML = `
-    <li>${todoText}</li>
+    <li data-id=${todoObject.id}>${todoObject.text}</li>
     <span><i class="bi bi-trash3"></i></span>
     <span><i class="bi bi-check2"></i></span>
   `;
+  if (todoObject.completed) {
+    todoDiv.classList.add("completed");
+  }
   return todoDiv;
 }
 
@@ -46,7 +59,12 @@ function handleTodoClick(e) {
 
 function toggleTodoCompletion(item) {
   const todo = item.parentElement.parentElement;
+  const todoId = item.parentElement.parentElement.childNodes[1].dataset.id;
   todo.classList.toggle("completed");
+
+  const todoObject = findUniqueTodo(Number(todoId));
+  todoObject.completed = !todoObject.completed;
+  saveTodoToLocal(todoObject);
 }
 
 function removeTodoElement(item) {
@@ -73,9 +91,17 @@ function filterTodos(e) {
   });
 }
 
-function saveTodoToLocal(todoText) {
+function saveTodoToLocal(todoObject) {
   const savedTodos = getSavedTodos();
-  savedTodos.push(todoText);
+  const todo = findUniqueTodo(todoObject.id);
+
+  if (!todo) {
+    savedTodos.push(todoObject);
+  } else {
+    const index = savedTodos.findIndex((todo) => todo.id === todoObject.id);
+    savedTodos[index] = todoObject;
+  }
+  
   localStorage.setItem("todos", JSON.stringify(savedTodos));
 }
 
@@ -85,14 +111,20 @@ function getSavedTodos() {
 
 function loadTodos() {
   const savedTodos = getSavedTodos();
-  savedTodos.forEach((todoText) => {
-    const todoDiv = createTodoElement(todoText);
+  savedTodos.forEach((todoObject) => {
+    const todoDiv = createTodoElement(todoObject);
     todoList.appendChild(todoDiv);
   });
 }
 
 function removeTodoFromLocal(todoText) {
   const savedTodos = getSavedTodos();
-  const updatedTodos = savedTodos.filter((text) => text !== todoText);
+  const updatedTodos = savedTodos.filter((todo) => todo.text !== todoText);
   localStorage.setItem("todos", JSON.stringify(updatedTodos));
+}
+
+function findUniqueTodo(todoId) {
+  const savedTodos = getSavedTodos();
+  const todo = savedTodos.find((todo) => todo.id === todoId);
+  return todo;
 }
