@@ -59,7 +59,7 @@ function handleTodoClick(e) {
 
 function toggleTodoCompletion(item) {
   const todo = item.parentElement.parentElement;
-  const todoId = item.parentElement.parentElement.childNodes[1].dataset.id;
+  const todoId = todo.querySelector("li").dataset.id;
   todo.classList.toggle("completed");
 
   const todoObject = findUniqueTodo(Number(todoId));
@@ -101,7 +101,7 @@ function saveTodoToLocal(todoObject) {
     const index = savedTodos.findIndex((todo) => todo.id === todoObject.id);
     savedTodos[index] = todoObject;
   }
-  
+
   localStorage.setItem("todos", JSON.stringify(savedTodos));
 }
 
